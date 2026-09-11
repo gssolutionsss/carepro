@@ -37,43 +37,36 @@ if (!document.querySelector('link[href="/mobile-optimized.css"]')) {
   mobileStyles.href = '/mobile-optimized.css';
   document.head.append(mobileStyles);
 }
+if (!document.querySelector('link[href="/emergency-fix.css"]')) {
+  const emergencyStyles = document.createElement('link');
+  emergencyStyles.rel = 'stylesheet';
+  emergencyStyles.href = '/emergency-fix.css';
+  document.head.append(emergencyStyles);
+}
 document.documentElement.dir = 'rtl';
 document.querySelectorAll('.year').forEach((year) => { year.textContent = new Date().getFullYear(); });
 
 const menu = document.querySelector('.menu-btn');
 const links = document.querySelector('.nav-links');
 if (menu && links) {
-  menu.addEventListener('click', () => {
-    const open = links.classList.toggle('open');
-    menu.setAttribute('aria-expanded', String(open));
-    document.body.style.overflow = open ? 'hidden' : '';
-  });
-  
-  // Close sidebar when clicking outside
-  document.addEventListener('click', (e) => {
-    if (links.classList.contains('open') && !links.contains(e.target) && !menu.contains(e.target)) {
-      links.classList.remove('open');
-      menu.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    }
-  });
-  
-  // Close sidebar when clicking links
-  links.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-    links.classList.remove('open');
+  const closeDrawer = () => {
+    document.querySelector('.mobile-menu-layer')?.remove();
+    document.body.classList.remove('mobile-menu-active');
     menu.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  }));
-  
-  // Close sidebar with escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && links.classList.contains('open')) {
-      links.classList.remove('open');
-      menu.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-      menu.focus();
-    }
+  };
+  menu.addEventListener('click', () => {
+    if (window.innerWidth > 768) return;
+    if (document.querySelector('.mobile-menu-layer')) return closeDrawer();
+    const drawer = '<div class="mobile-menu-layer"><aside class="mobile-drawer" role="dialog" aria-modal="true" aria-label="قائمة التنقل"><div class="drawer-head"><strong class="drawer-brand">Care Pro</strong><button class="drawer-close" type="button" aria-label="إغلاق القائمة">×</button></div><nav class="drawer-links">' + [...links.children].map((item) => item.outerHTML).join('') + '</nav><p class="drawer-footer">حلول وتجهيزات طبية موثوقة</p></aside></div>';
+    document.body.insertAdjacentHTML('beforeend', drawer);
+    document.body.classList.add('mobile-menu-active');
+    menu.setAttribute('aria-expanded', 'true');
+    const layer = document.querySelector('.mobile-menu-layer');
+    layer.querySelector('.drawer-close').addEventListener('click', closeDrawer);
+    layer.addEventListener('click', (event) => { if (event.target === layer) closeDrawer(); });
+    layer.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeDrawer));
   });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeDrawer(); });
 }
 
 function productCard(product, index) {
