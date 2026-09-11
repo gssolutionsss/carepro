@@ -43,8 +43,20 @@ if (!document.querySelector('link[href="/emergency-fix.css"]')) {
   emergencyStyles.href = '/emergency-fix.css';
   document.head.append(emergencyStyles);
 }
+if (!document.querySelector('link[href="/gateway.css"]')) {
+  const gatewayStyles = document.createElement('link');
+  gatewayStyles.rel = 'stylesheet';
+  gatewayStyles.href = '/gateway.css';
+  document.head.append(gatewayStyles);
+}
 document.documentElement.dir = 'rtl';
 document.querySelectorAll('.year').forEach((year) => { year.textContent = new Date().getFullYear(); });
+
+const entryGate = document.querySelector('.entry-gate');
+entryGate?.querySelector('[data-enter-hospital]')?.addEventListener('click', () => {
+  entryGate.classList.add('is-leaving');
+  setTimeout(() => entryGate.remove(), 400);
+});
 
 const menu = document.querySelector('.menu-btn');
 const links = document.querySelector('.nav-links');
@@ -62,6 +74,11 @@ if (menu && links) {
     document.body.classList.add('mobile-menu-active');
     menu.setAttribute('aria-expanded', 'true');
     const layer = document.querySelector('.mobile-menu-layer');
+    const drawerPanel = layer.querySelector('.mobile-drawer');
+    drawerPanel.setAttribute('aria-label', '\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u062a\u0646\u0642\u0644');
+    layer.querySelector('.drawer-close').setAttribute('aria-label', '\u0625\u063a\u0644\u0627\u0642 \u0627\u0644\u0642\u0627\u0626\u0645\u0629');
+    layer.querySelector('.drawer-close').innerHTML = '&times;';
+    layer.querySelector('.drawer-footer').textContent = '\u062d\u0644\u0648\u0644 \u0648\u062a\u062c\u0647\u064a\u0632\u0627\u062a \u0637\u0628\u064a\u0629 \u0645\u0648\u062b\u0648\u0642\u0629';
     layer.querySelector('.drawer-close').addEventListener('click', closeDrawer);
     layer.addEventListener('click', (event) => { if (event.target === layer) closeDrawer(); });
     layer.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeDrawer));

@@ -438,17 +438,6 @@
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --blue: #4db8e8;
-    --ink: #e8f4f8;
-    --muted: #a8c8d8;
-    --pale: #1a3a4a;
-    --line: #2a4a5a;
-    --navy: #0a1a2a;
-  }
-}
 
 /* Landscape Mobile */
 @media (max-width: 768px) and (orientation: landscape) {
