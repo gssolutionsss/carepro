@@ -31,6 +31,12 @@ if (!document.querySelector('link[href="/final-touches.css"]')) {
   finalStyles.href = '/final-touches.css';
   document.head.append(finalStyles);
 }
+if (!document.querySelector('link[href="/mobile-optimized.css"]')) {
+  const mobileStyles = document.createElement('link');
+  mobileStyles.rel = 'stylesheet';
+  mobileStyles.href = '/mobile-optimized.css';
+  document.head.append(mobileStyles);
+}
 document.documentElement.dir = 'rtl';
 document.querySelectorAll('.year').forEach((year) => { year.textContent = new Date().getFullYear(); });
 
@@ -40,13 +46,34 @@ if (menu && links) {
   menu.addEventListener('click', () => {
     const open = links.classList.toggle('open');
     menu.setAttribute('aria-expanded', String(open));
-    menu.textContent = open ? '×' : '☰';
+    document.body.style.overflow = open ? 'hidden' : '';
   });
+  
+  // Close sidebar when clicking outside
+  document.addEventListener('click', (e) => {
+    if (links.classList.contains('open') && !links.contains(e.target) && !menu.contains(e.target)) {
+      links.classList.remove('open');
+      menu.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+  });
+  
+  // Close sidebar when clicking links
   links.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
     links.classList.remove('open');
     menu.setAttribute('aria-expanded', 'false');
-    menu.textContent = '☰';
+    document.body.style.overflow = '';
   }));
+  
+  // Close sidebar with escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && links.classList.contains('open')) {
+      links.classList.remove('open');
+      menu.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      menu.focus();
+    }
+  });
 }
 
 function productCard(product, index) {
