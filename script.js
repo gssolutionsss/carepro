@@ -49,14 +49,92 @@ if (!document.querySelector('link[href="/gateway.css"]')) {
   gatewayStyles.href = '/gateway.css';
   document.head.append(gatewayStyles);
 }
+if (!document.querySelector('link[href="/motion.css"]')) {
+  const motionStyles = document.createElement('link');
+  motionStyles.rel = 'stylesheet';
+  motionStyles.href = '/motion.css';
+  document.head.append(motionStyles);
+}
+if (!document.querySelector('link[href="/brand-polish.css"]')) {
+  const brandStyles = document.createElement('link');
+  brandStyles.rel = 'stylesheet';
+  brandStyles.href = '/brand-polish.css';
+  document.head.append(brandStyles);
+}
+if (!document.querySelector('link[rel~="icon"]')) {
+  const favicon = document.createElement('link');
+  favicon.rel = 'icon';
+  favicon.type = 'image/png';
+  favicon.href = '/new%20logo.png';
+  document.head.append(favicon);
+}
 document.documentElement.dir = 'rtl';
 document.querySelectorAll('.year').forEach((year) => { year.textContent = new Date().getFullYear(); });
 
+const resetToTop = () => {
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => window.scrollTo(0, 0));
+};
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+resetToTop();
+window.addEventListener('pageshow', resetToTop);
+document.querySelectorAll('a.logo').forEach((logo) => logo.addEventListener('click', resetToTop));
+
+const motionObserver = 'IntersectionObserver' in window
+  ? new IntersectionObserver((entries) => entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+      motionObserver.unobserve(entry.target);
+    }
+  }), { threshold: 0.12 })
+  : null;
+const applyMotion = (scope = document) => {
+  const selector = 'main > section, footer, .feature-card, .category-card, .offer-card, .assurance-card, .product-link, .direct-card, .faq-item, .reach-step, .hype-stat, .story-step, .difference-card, .role-card';
+  scope.querySelectorAll(selector).forEach((element, index) => {
+    if (element.classList.contains('motion-reveal')) return;
+    element.classList.add('motion-reveal');
+    element.style.setProperty('--motion-delay', `${Math.min(index % 8, 6) * 55}ms`);
+    if (motionObserver) motionObserver.observe(element);
+    else element.classList.add('is-visible');
+  });
+};
+applyMotion();
+
+const additionalPhone = '+20 10 07600461';
+document.querySelectorAll('.footer-details').forEach((details) => {
+  if (details.querySelector('[href="tel:+201007600461"]')) return;
+  const phoneLink = document.createElement('a');
+  phoneLink.className = 'contact-row';
+  phoneLink.href = 'tel:+201007600461';
+  phoneLink.innerHTML = `<span aria-hidden="true">&#9742;</span><b dir="ltr">${additionalPhone}</b>`;
+  details.append(phoneLink);
+});
+const contactCards = document.querySelector('.contact-cards');
+if (contactCards && !contactCards.querySelector('[href="tel:+201007600461"]')) {
+  const phoneCard = document.createElement('a');
+  phoneCard.className = 'direct-card';
+  phoneCard.href = 'tel:+201007600461';
+  phoneCard.innerHTML = `<span class="direct-icon" aria-hidden="true">&#9742;</span><small></small><strong dir="ltr">${additionalPhone}</strong>`;
+  phoneCard.querySelector('small').textContent = '\u0627\u062a\u0635\u0644 \u0628\u0646\u0627 \u2014 \u0631\u0642\u0645 \u0625\u0636\u0627\u0641\u064a';
+  contactCards.append(phoneCard);
+  applyMotion(contactCards);
+}
+
 const entryGate = document.querySelector('.entry-gate');
 entryGate?.querySelector('[data-enter-hospital]')?.addEventListener('click', () => {
+  resetToTop();
   entryGate.classList.add('is-leaving');
-  setTimeout(() => entryGate.remove(), 400);
+  setTimeout(() => {
+    entryGate.remove();
+    resetToTop();
+  }, 400);
 });
+const homeCareOption = entryGate?.querySelector('.gate-home');
+if (homeCareOption) {
+  homeCareOption.disabled = false;
+  homeCareOption.removeAttribute('aria-disabled');
+  homeCareOption.addEventListener('click', () => window.open('https://careproco.store', '_blank', 'noopener'));
+}
 
 const menu = document.querySelector('.menu-btn');
 const links = document.querySelector('.nav-links');
@@ -105,8 +183,14 @@ async function loadProducts() {
   if (!grid && !featured) return;
   try {
     const products = await getProducts();
-    if (grid) grid.innerHTML = products.map(productCard).join('');
-    if (featured) featured.innerHTML = products.slice(0, 4).map(productCard).join('');
+    if (grid) {
+      grid.innerHTML = products.map(productCard).join('');
+      applyMotion(grid);
+    }
+    if (featured) {
+      featured.innerHTML = products.slice(0, 4).map(productCard).join('');
+      applyMotion(featured);
+    }
   } catch {
     [grid, featured].filter(Boolean).forEach((element) => {
       element.innerHTML = '<p class="load-error">تعذّر تحميل المنتجات حالياً.</p>';

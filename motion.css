@@ -1,0 +1,26 @@
+/* High-energy but lightweight motion system. */
+html{scroll-behavior:smooth}
+.navbar{animation:nav-arrive .7s cubic-bezier(.16,1,.3,1) both}
+.logo{transition:transform .25s ease,filter .25s ease}
+.logo:hover{transform:translateY(-2px) scale(1.025);filter:drop-shadow(0 8px 10px #2596be33)}
+.btn,.gate-option,.feature-card,.category-card,.offer-card,.assurance-card,.product-link .product-card,.direct-card,.story-step,.difference-card,.role-card,.hype-stat{transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease,filter .28s ease}
+.btn:hover{transform:translateY(-4px) scale(1.025)!important;filter:saturate(1.12);box-shadow:0 14px 26px #2596be40}
+.feature-card:hover,.category-card:hover,.offer-card:hover,.assurance-card:hover,.product-link:hover .product-card,.direct-card:hover,.story-step:hover,.difference-card:hover,.role-card:hover,.hype-stat:hover{transform:translateY(-7px) scale(1.012)!important;box-shadow:0 20px 38px #2596be2b!important}
+.motion-reveal{opacity:0;transform:translateY(30px) scale(.985);filter:blur(4px);transition:opacity .65s cubic-bezier(.16,1,.3,1) var(--motion-delay,0ms),transform .65s cubic-bezier(.16,1,.3,1) var(--motion-delay,0ms),filter .55s ease var(--motion-delay,0ms)}
+.motion-reveal.is-visible{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+.hero h1,.page-heading h1,.about-hero h1{animation:title-arrive .75s .08s cubic-bezier(.16,1,.3,1) both}
+.hero p,.page-heading p,.about-hero p{animation:title-arrive .75s .18s cubic-bezier(.16,1,.3,1) both}
+.hero .btn,.page-heading .btn,.about-cta .btn{animation:title-arrive .75s .3s cubic-bezier(.16,1,.3,1) both}
+.hero-art{animation:hero-float 4.8s ease-in-out infinite}
+.hero-art span{animation:hero-pulse 2.8s ease-in-out infinite}
+.offer-icon,.feature-icon,.assurance-icon,.direct-icon{transition:transform .32s cubic-bezier(.2,.8,.2,1),box-shadow .32s ease}
+.offer-card:hover .offer-icon,.feature-card:hover .feature-icon,.assurance-card:hover .assurance-icon,.direct-card:hover .direct-icon{transform:rotate(-10deg) scale(1.14);box-shadow:0 10px 22px #2596be35}
+.product-link:hover img{transform:scale(1.07)!important}
+.contact-fab{animation:fab-arrive .7s .5s cubic-bezier(.16,1,.3,1) both}
+@keyframes nav-arrive{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes title-arrive{from{opacity:0;transform:translateY(22px);filter:blur(4px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes hero-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-13px) rotate(1.2deg)}}
+@keyframes hero-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes fab-arrive{from{opacity:0;transform:translateX(-28px) scale(.8)}to{opacity:1;transform:translateX(0) scale(1)}}
+@media(max-width:768px){.motion-reveal{transform:translateY(18px);filter:none;transition-duration:.48s}.feature-card:hover,.category-card:hover,.offer-card:hover,.assurance-card:hover,.product-link:hover .product-card,.direct-card:hover,.story-step:hover,.difference-card:hover,.role-card:hover,.hype-stat:hover{transform:translateY(-3px) scale(1.005)!important}.hero-art{animation-duration:5.5s}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.motion-reveal{opacity:1;transform:none;filter:none}}
